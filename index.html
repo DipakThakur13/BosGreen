@@ -1,0 +1,3736 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BosGreen - EV Charging Stations</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f8fafc;
+        }
+
+        /* Header Styles */
+        .header {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-menu a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: opacity 0.3s;
+        }
+
+        .nav-menu a:hover {
+            opacity: 0.8;
+        }
+        
+        /* Mobile Navigation */
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+        
+        .mobile-menu {
+            display: block;
+            position: fixed;
+            top: 0;
+            left: -100%;
+            width: 280px;
+            height: 100vh;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            padding: 2rem 0;
+            box-shadow: 4px 0 10px rgba(0,0,0,0.2);
+            z-index: 999;
+            transform: translateX(0);
+            transition: left 0.3s ease;
+            overflow-y: auto;
+        }
+        
+        .mobile-menu.active {
+            left: 0;
+        }
+        
+        /* Mobile menu overlay */
+        .mobile-menu-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 998;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .mobile-menu-overlay.active {
+            display: block;
+            opacity: 1;
+        }
+        
+        .mobile-menu ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .mobile-menu li {
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .mobile-menu a {
+            display: block;
+            padding: 1rem 2rem;
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+        
+        .mobile-menu a:hover {
+            background-color: rgba(255,255,255,0.1);
+        }
+        
+        .mobile-menu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem 1rem;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            margin-bottom: 1rem;
+        }
+        
+        .mobile-menu-header h3 {
+            color: white;
+            margin: 0;
+            font-size: 1.2rem;
+        }
+        
+        .mobile-menu-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: background-color 0.3s;
+        }
+        
+        .mobile-menu-close:hover {
+            background-color: rgba(255,255,255,0.1);
+        }
+
+        .login-btn {
+            background: rgba(255,255,255,0.2);
+            padding: 0.5rem 1.5rem;
+            border-radius: 25px;
+            border: 1px solid rgba(255,255,255,0.3);
+            transition: all 0.3s;
+        }
+
+        .login-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.9) 0%, rgba(5, 150, 105, 0.9) 100%), url('https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=1920&h=1080&fit=crop') center/cover;
+            color: white;
+            padding: 8rem 0 4rem;
+            text-align: center;
+        }
+
+        .hero-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: white;
+            color: #10b981;
+        }
+
+        .btn-secondary {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        /* Features Section */
+        .features {
+            padding: 5rem 0;
+            background: white;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 3rem;
+            color: #1f2937;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            color: #10b981;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #1f2937;
+        }
+
+        /* Restaurant Section */
+        .restaurants {
+            padding: 5rem 0;
+            background: #f8fafc;
+        }
+
+        .restaurant-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .restaurant-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .restaurant-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .restaurant-image {
+            height: 200px;
+            background: linear-gradient(45deg, #10b981, #059669);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
+        }
+
+        .restaurant-info {
+            padding: 1.5rem;
+        }
+
+        .restaurant-info h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+            color: #1f2937;
+        }
+
+        .restaurant-info p {
+            color: #6b7280;
+            margin-bottom: 1rem;
+        }
+
+        .restaurant-rating {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .stars {
+            color: #fbbf24;
+        }
+
+        /* Login Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 2rem;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 400px;
+            position: relative;
+        }
+
+        /* Advanced Login Modal Styles */
+        .advanced-login-modal {
+            max-width: 500px;
+            padding: 0;
+            overflow: hidden;
+            margin: 3% auto;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .auth-toggle {
+            display: flex;
+            background: #f3f4f6;
+            border-radius: 10px;
+            padding: 4px;
+            margin: 0 2rem 2rem 2rem;
+        }
+
+        .toggle-btn {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            background: transparent;
+            border-radius: 8px;
+            font-weight: 600;
+            color: #6b7280;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .toggle-btn.active {
+            background: white;
+            color: #10b981;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .auth-form {
+            display: none;
+            padding: 0 2rem 2rem 2rem;
+            flex: 1;
+            overflow-y: auto;
+            max-height: calc(90vh - 120px);
+        }
+
+        .auth-form.active {
+            display: block;
+        }
+
+        /* Scrollbar styling for auth forms */
+        .auth-form::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .auth-form::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 3px;
+        }
+
+        .auth-form::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 3px;
+        }
+
+        .auth-form::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
+        }
+
+        .social-login {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .social-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 12px 20px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            background: white;
+            color: #374151;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .social-btn:hover {
+            background: #f9fafb;
+            border-color: #d1d5db;
+        }
+
+        .google-btn {
+            color: #ea4335;
+        }
+
+        .facebook-btn {
+            color: #1877f2;
+        }
+
+        .divider {
+            text-align: center;
+            margin: 1.5rem 0;
+            position: relative;
+        }
+
+        .divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: #e5e7eb;
+        }
+
+        .divider span {
+            background: white;
+            padding: 0 1rem;
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+
+        .input-group {
+            position: relative;
+            display: flex;
+            align-items: center;
+            width: 100%;
+        }
+
+        .input-group i {
+            position: absolute;
+            left: 12px;
+            color: #9ca3af;
+            z-index: 1;
+            font-size: 1rem;
+        }
+
+        .input-group input {
+            padding-left: 2.5rem;
+            padding-right: 2.5rem;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 12px;
+            background: none;
+            border: none;
+            color: #9ca3af;
+            cursor: pointer;
+            z-index: 1;
+        }
+
+        .password-toggle:hover {
+            color: #6b7280;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+
+        .checkbox-label input[type="checkbox"] {
+            display: none;
+        }
+
+        .checkmark {
+            width: 16px;
+            height: 16px;
+            border: 2px solid #d1d5db;
+            border-radius: 3px;
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .checkbox-label input[type="checkbox"]:checked + .checkmark {
+            background: #10b981;
+            border-color: #10b981;
+        }
+
+        .checkbox-label input[type="checkbox"]:checked + .checkmark::after {
+            content: '✓';
+            position: absolute;
+            top: -2px;
+            left: 2px;
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .forgot-link {
+            color: #10b981;
+            text-decoration: none;
+            font-size: 0.875rem;
+        }
+
+        .forgot-link:hover {
+            text-decoration: underline;
+        }
+
+        .password-strength {
+            margin-top: 0.5rem;
+        }
+
+        .strength-bar {
+            height: 4px;
+            background: #e5e7eb;
+            border-radius: 2px;
+            overflow: hidden;
+            margin-bottom: 0.25rem;
+        }
+
+        .strength-fill {
+            height: 100%;
+            width: 0%;
+            transition: all 0.3s;
+            border-radius: 2px;
+        }
+
+        .strength-fill.weak {
+            width: 25%;
+            background: #ef4444;
+        }
+
+        .strength-fill.fair {
+            width: 50%;
+            background: #f59e0b;
+        }
+
+        .strength-fill.good {
+            width: 75%;
+            background: #10b981;
+        }
+
+        .strength-fill.strong {
+            width: 100%;
+            background: #059669;
+        }
+
+        .strength-text {
+            font-size: 0.75rem;
+            color: #6b7280;
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            margin-left: 0.5rem;
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* Additional form styling for advanced login */
+        .auth-form h2 {
+            margin-bottom: 1rem;
+            color: #1f2937;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .auth-form p {
+            margin-bottom: 1.5rem;
+            color: #6b7280;
+            line-height: 1.5;
+        }
+
+        .auth-form .btn {
+            margin-top: 1rem;
+        }
+
+        .auth-form .form-group:last-child {
+            margin-bottom: 0;
+        }
+
+        /* User Profile Section */
+        .user-profile {
+            display: none;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            background: rgba(255,255,255,0.1);
+            transition: all 0.3s;
+        }
+
+        .user-profile:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #10b981;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 0.875rem;
+        }
+
+        .user-name {
+            color: white;
+            font-weight: 500;
+        }
+
+        .profile-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            min-width: 200px;
+            z-index: 1000;
+            display: none;
+        }
+
+        .profile-dropdown.active {
+            display: block;
+        }
+
+        .profile-item {
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #374151;
+            text-decoration: none;
+            transition: background 0.3s;
+        }
+
+        .profile-item:hover {
+            background: #f9fafb;
+        }
+
+        .profile-item.logout {
+            border-top: 1px solid #e5e7eb;
+            color: #ef4444;
+        }
+
+        /* Notification System */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 1rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            z-index: 10000;
+            max-width: 400px;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .notification-success {
+            border-left: 4px solid #10b981;
+        }
+
+        .notification-error {
+            border-left: 4px solid #ef4444;
+        }
+
+        .notification-info {
+            border-left: 4px solid #3b82f6;
+        }
+
+        .notification i {
+            font-size: 1.25rem;
+        }
+
+        .notification-success i {
+            color: #10b981;
+        }
+
+        .notification-error i {
+            color: #ef4444;
+        }
+
+        .notification-info i {
+            color: #3b82f6;
+        }
+
+        .notification span {
+            flex: 1;
+            color: #374151;
+        }
+
+        .notification button {
+            background: none;
+            border: none;
+            color: #9ca3af;
+            cursor: pointer;
+            font-size: 1.25rem;
+            padding: 0;
+        }
+
+        .notification button:hover {
+            color: #6b7280;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* Responsive adjustments for advanced login */
+        @media (max-width: 768px) {
+            .advanced-login-modal {
+                margin: 5% auto;
+                width: 95%;
+                max-width: none;
+                max-height: 95vh;
+            }
+
+            .auth-toggle {
+                margin: 0 1rem 1.5rem 1rem;
+            }
+
+            .auth-form {
+                padding: 0 1rem 1.5rem 1rem;
+                max-height: calc(95vh - 100px);
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 0.75rem;
+            }
+
+            .form-options {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
+            .social-login {
+                gap: 0.75rem;
+            }
+
+            .social-btn {
+                padding: 10px 16px;
+                font-size: 0.875rem;
+            }
+
+            .notification {
+                right: 10px;
+                left: 10px;
+                max-width: none;
+            }
+
+            .input-group input {
+                padding: 0.75rem 0.75rem 0.75rem 2.25rem;
+                font-size: 0.875rem;
+            }
+
+            .input-group i {
+                left: 10px;
+                font-size: 0.875rem;
+            }
+        }
+
+        .close {
+            position: absolute;
+            right: 1rem;
+            top: 1rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #6b7280;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #374151;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #10b981;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+        }
+
+        /* Advanced Login Input Styles */
+        .input-group input {
+            width: 100%;
+            padding: 0.75rem 0.75rem 0.75rem 2.5rem;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s;
+            background: white;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #10b981;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+        }
+
+        .input-group input::placeholder {
+            color: #9ca3af;
+        }
+
+        /* Map Section */
+        .map-section {
+            padding: 5rem 0;
+            background: white;
+        }
+
+        .map-container {
+            height: 400px;
+            background: #e5e7eb;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6b7280;
+            font-size: 1.2rem;
+        }
+
+        /* Footer */
+        .footer {
+            background: #1f2937;
+            color: white;
+            padding: 3rem 0 1rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3 {
+            margin-bottom: 1rem;
+            color: #10b981;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-section ul li a {
+            color: #d1d5db;
+            text-decoration: none;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid #374151;
+            color: #9ca3af;
+        }
+
+        /* Appointment Booking Modal */
+        .booking-modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .booking-content {
+            background-color: white;
+            margin: 2% auto;
+            padding: 2rem;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 600px;
+            position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .booking-steps {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .booking-step {
+            flex: 1;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .step-number {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #e5e7eb;
+            color: #6b7280;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 0.5rem;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .step-number.active {
+            background: #10b981;
+            color: white;
+        }
+
+        .step-number.completed {
+            background: #059669;
+            color: white;
+        }
+
+        .step-title {
+            font-size: 0.9rem;
+            color: #6b7280;
+            font-weight: 500;
+        }
+
+        .step-title.active {
+            color: #10b981;
+        }
+
+        .booking-steps::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            right: 20px;
+            height: 2px;
+            background: #e5e7eb;
+            z-index: 1;
+        }
+
+        .booking-form {
+            display: none;
+        }
+
+        .booking-form.active {
+            display: block;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .time-slots {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .time-slot {
+            padding: 0.75rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: white;
+        }
+
+        .time-slot:hover {
+            border-color: #10b981;
+            background: #f0fdf4;
+        }
+
+        .time-slot.selected {
+            border-color: #10b981;
+            background: #10b981;
+            color: white;
+        }
+
+        .time-slot.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            background: #f3f4f6;
+        }
+
+        .booking-summary {
+            background: #f8fafc;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+
+        .summary-item:last-child {
+            margin-bottom: 0;
+            padding-top: 0.5rem;
+            border-top: 1px solid #e5e7eb;
+            font-weight: 600;
+        }
+
+        /* Menu Modal */
+        .menu-modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .menu-content {
+            background-color: white;
+            margin: 2% auto;
+            padding: 2rem;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 800px;
+            position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .menu-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #f3f4f6;
+        }
+
+        .menu-categories {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .menu-category {
+            padding: 0.5rem 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: white;
+        }
+
+        .menu-category.active {
+            border-color: #10b981;
+            background: #10b981;
+            color: white;
+        }
+
+        .menu-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .menu-item {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .menu-item:hover {
+            transform: translateY(-2px);
+        }
+
+        .menu-item-image {
+            height: 150px;
+            background: linear-gradient(45deg, #10b981, #059669);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .menu-item-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .menu-item-image .icon-fallback {
+            position: relative;
+            z-index: 1;
+        }
+
+        .menu-item-info {
+            padding: 1rem;
+        }
+
+        .menu-item-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #1f2937;
+        }
+
+        .menu-item-description {
+            color: #6b7280;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .menu-item-price {
+            font-weight: 600;
+            color: #10b981;
+            font-size: 1.1rem;
+        }
+
+        /* Bills Section */
+        .bills-section {
+            padding: 5rem 0;
+            background: white;
+        }
+
+        .bills-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .bills-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .bills-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .bill-tab {
+            padding: 0.75rem 1.5rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: white;
+            font-weight: 500;
+        }
+
+        .bill-tab.active {
+            border-color: #10b981;
+            background: #10b981;
+            color: white;
+        }
+
+        .bills-content {
+            display: none;
+        }
+
+        .bills-content.active {
+            display: block;
+        }
+
+        .bill-card {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-left: 4px solid #10b981;
+        }
+
+        .bill-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .bill-date {
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .bill-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .bill-status.paid {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .bill-status.pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .bill-status.overdue {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .bill-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .bill-detail {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .bill-amount {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #10b981;
+        }
+
+        .bill-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-small {
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+        }
+
+        /* Contact Section */
+        .contact-section {
+            padding: 5rem 0;
+            background: #f8fafc;
+        }
+
+        .contact-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            margin-top: 3rem;
+        }
+
+        .contact-info {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .contact-icon {
+            width: 50px;
+            height: 50px;
+            background: #10b981;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .contact-form {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(234, 231, 231, 0.1);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 1rem;
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #10b981;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+        }
+
+        /* Enhanced Restaurant Section */
+        .restaurant-image {
+            height: 200px;
+            background: linear-gradient(45deg, #10b981, #059669);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .restaurant-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .restaurant-image .icon-fallback {
+            position: relative;
+            z-index: 2;
+            background: rgba(0,0,0,0.3);
+            padding: 1rem;
+            border-radius: 50%;
+        }
+
+        /* Responsive Design */
+        
+        /* Tablet Styles */
+        @media (max-width: 1024px) {
+            .nav-container {
+                padding: 0 1.5rem;
+            }
+            
+            .hero h1 {
+                font-size: 3rem;
+            }
+            
+            .hero-content {
+                padding: 0 1.5rem;
+            }
+            
+            .container {
+                padding: 0 1.5rem;
+            }
+            
+            .features-grid {
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                gap: 1.5rem;
+            }
+            
+            .restaurant-grid {
+                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+                gap: 1.5rem;
+            }
+            
+            .section-title {
+                font-size: 2.2rem;
+                margin-bottom: 2.5rem;
+            }
+            
+            /* Tablet-specific improvements */
+            .btn {
+                min-height: 48px;
+                font-size: 1rem;
+            }
+            
+            .feature-card {
+                padding: 2rem;
+            }
+            
+            .restaurant-card {
+                max-width: 500px;
+                margin: 0 auto;
+            }
+            
+            .modal-content {
+                max-width: 600px;
+            }
+            
+            .advanced-login-modal {
+                max-width: 600px;
+            }
+            
+            /* Better touch targets for tablets */
+            .category-btn, .social-btn, .quantity-btn {
+                min-height: 48px;
+                touch-action: manipulation;
+            }
+            
+            .time-slot {
+                min-height: 48px;
+                padding: 1rem;
+            }
+        }
+        
+        /* Mobile Styles */
+        @media (max-width: 768px) {
+            /* Header & Navigation */
+            .nav-container {
+                padding: 0 1rem;
+            }
+            
+            .nav-menu {
+                display: none;
+            }
+            
+            .mobile-menu-toggle {
+                display: block;
+            }
+            
+            .mobile-menu {
+                display: block;
+                width: 280px;
+            }
+            
+            .mobile-menu-overlay {
+                display: block;
+            }
+            
+            .logo {
+                font-size: 1.5rem;
+            }
+            
+            .user-profile {
+                display: none;
+            }
+            
+            .login-btn {
+                padding: 0.4rem 1rem;
+                font-size: 0.9rem;
+            }
+            
+            /* Hero Section */
+            .hero {
+                padding: 6rem 0 3rem;
+            }
+            
+            .hero h1 {
+                font-size: 2.2rem;
+                margin-bottom: 0.75rem;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+                margin-bottom: 1.5rem;
+            }
+            
+            .hero-content {
+                padding: 0 1rem;
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+                gap: 1rem;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 280px;
+                justify-content: center;
+                padding: 0.75rem 1.5rem;
+                font-size: 0.95rem;
+            }
+            
+            /* Container & Sections */
+            .container {
+                padding: 0 1rem;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+                margin-bottom: 2rem;
+            }
+            
+            /* Features Section */
+            .features {
+                padding: 3rem 0;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .feature-card {
+                padding: 1.5rem;
+            }
+            
+            .feature-icon {
+                font-size: 2.5rem;
+            }
+            
+            .feature-card h3 {
+                font-size: 1.3rem;
+            }
+            
+            /* Restaurant Section */
+            .restaurants {
+                padding: 3rem 0;
+            }
+            
+            .restaurant-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .restaurant-card {
+                margin: 0 auto;
+                max-width: 400px;
+            }
+            
+            .restaurant-info {
+                padding: 1.25rem;
+            }
+            
+            .restaurant-info h3 {
+                font-size: 1.2rem;
+            }
+            
+            /* Forms & Modals */
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .modal-content {
+                margin: 10% auto;
+                width: 95%;
+                padding: 1.5rem;
+            }
+            
+            .advanced-login-modal {
+                margin: 5% auto;
+                width: 95%;
+                max-width: none;
+                max-height: 95vh;
+            }
+            
+            .auth-toggle {
+                margin: 0 1rem 1.5rem 1rem;
+            }
+            
+            .auth-form {
+                padding: 0 1rem 1.5rem 1rem;
+                max-height: calc(95vh - 100px);
+            }
+            
+            .form-options {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            
+            .social-login {
+                gap: 0.75rem;
+            }
+            
+            .social-btn {
+                padding: 10px 16px;
+                font-size: 0.875rem;
+            }
+            
+            /* Grid Layouts */
+            .time-slots {
+                grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            }
+            
+            .menu-items {
+                grid-template-columns: 1fr;
+            }
+            
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .bill-details {
+                grid-template-columns: 1fr;
+            }
+            
+            .bill-actions {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            /* Menu Categories */
+            .menu-categories {
+                flex-wrap: wrap;
+                gap: 0.5rem;
+            }
+            
+            .category-btn {
+                padding: 0.5rem 1rem;
+                font-size: 0.9rem;
+            }
+            
+            /* Menu Items */
+            .menu-item {
+                flex-direction: column;
+                text-align: center;
+                gap: 1rem;
+            }
+            
+            .menu-item-image {
+                width: 100%;
+                max-width: 200px;
+                height: 150px;
+                margin: 0 auto;
+            }
+            
+            .menu-item-info {
+                width: 100%;
+            }
+            
+            .menu-item-actions {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .quantity-controls {
+                justify-content: center;
+            }
+            
+            /* Booking Summary */
+            .booking-summary {
+                padding: 1rem;
+            }
+            
+            .summary-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+            
+            /* Bill Cards */
+            .bill-card {
+                padding: 1rem;
+            }
+            
+            .bill-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+            
+            .bill-amount {
+                font-size: 1.5rem;
+            }
+            
+            /* Contact Section */
+            .contact-info {
+                padding: 1rem;
+            }
+            
+            .contact-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+            
+            /* Footer */
+            .footer {
+                padding: 2rem 0;
+            }
+            
+            .footer-content {
+                flex-direction: column;
+                text-align: center;
+                gap: 1rem;
+            }
+            
+            /* Additional mobile improvements */
+            .booking-summary {
+                max-height: 60vh;
+                overflow-y: auto;
+            }
+            
+            .menu-items {
+                max-height: 70vh;
+                overflow-y: auto;
+            }
+            
+            /* Better spacing for mobile */
+            .restaurant-card {
+                margin-bottom: 1rem;
+            }
+            
+            .feature-card {
+                margin-bottom: 1rem;
+            }
+            
+            /* Improved modal positioning */
+            .modal-content, .advanced-login-modal {
+                margin: 5% auto;
+                max-height: 90vh;
+                overflow-y: auto;
+            }
+            
+            /* Better form spacing */
+            .input-group {
+                margin-bottom: 1.25rem;
+            }
+            
+            .form-row {
+                gap: 1rem;
+            }
+        }
+        
+        /* Small Mobile Styles */
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+            
+            .hero p {
+                font-size: 0.9rem;
+            }
+            
+            .section-title {
+                font-size: 1.8rem;
+            }
+            
+            .btn {
+                padding: 0.7rem 1.25rem;
+                font-size: 0.9rem;
+            }
+            
+            .feature-card {
+                padding: 1.25rem;
+            }
+            
+            .restaurant-info {
+                padding: 1rem;
+            }
+            
+            .modal-content {
+                padding: 1.25rem;
+            }
+            
+            .auth-form {
+                padding: 0 0.75rem 1.25rem 0.75rem;
+            }
+            
+            .menu-item-image {
+                height: 120px;
+            }
+            
+            .bill-amount {
+                font-size: 1.3rem;
+            }
+            
+            /* Touch-friendly improvements */
+            .btn, .category-btn, .social-btn {
+                min-height: 44px;
+                touch-action: manipulation;
+            }
+            
+            .mobile-menu a {
+                min-height: 48px;
+                display: flex;
+                align-items: center;
+            }
+            
+            .quantity-btn {
+                min-width: 44px;
+                min-height: 44px;
+            }
+            
+            .time-slot {
+                min-height: 44px;
+                padding: 0.75rem;
+            }
+        }
+        
+        /* Landscape Mobile */
+        @media (max-width: 768px) and (orientation: landscape) {
+            .hero {
+                padding: 4rem 0 2rem;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .cta-buttons {
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .btn {
+                width: auto;
+                max-width: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav-container">
+            <div class="logo">
+                <i class="fas fa-charging-station"></i>
+                BosGreen
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#stations">Stations</a></li>
+                <li><a href="#restaurants">Restaurants</a></li>
+                <li><a href="#bills">My Bills</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+            <div class="user-profile" id="userProfile" onclick="toggleProfileDropdown()">
+                <div class="user-avatar" id="userAvatar">U</div>
+                <span class="user-name" id="userName">User</span>
+                <i class="fas fa-chevron-down"></i>
+                <div class="profile-dropdown" id="profileDropdown">
+                    <a href="#" class="profile-item" onclick="showProfile()">
+                        <i class="fas fa-user"></i> My Profile
+                    </a>
+                    <a href="#" class="profile-item" onclick="showBookings()">
+                        <i class="fas fa-calendar"></i> My Bookings
+                    </a>
+                    <a href="#" class="profile-item" onclick="showBills()">
+                        <i class="fas fa-receipt"></i> My Bills
+                    </a>
+                    <a href="#" class="profile-item" onclick="showSettings()">
+                        <i class="fas fa-cog"></i> Settings
+                    </a>
+                    <a href="#" class="profile-item logout" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </a>
+                </div>
+            </div>
+            <button class="login-btn" id="loginBtn" onclick="openLoginModal()">
+                <i class="fas fa-user"></i> Login
+            </button>
+            <button class="mobile-menu-toggle" id="mobileMenuToggle" onclick="toggleMobileMenu()">
+                <i class="fas fa-bars"></i>
+            </button>
+        </nav>
+        <!-- Mobile Menu Overlay -->
+        <div class="mobile-menu-overlay" id="mobileMenuOverlay" onclick="closeMobileMenu()"></div>
+        
+        <!-- Mobile Menu -->
+        <div class="mobile-menu" id="mobileMenu">
+            <div class="mobile-menu-header">
+                <h3>Menu</h3>
+                <button class="mobile-menu-close" onclick="closeMobileMenu()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <ul>
+                <li><a href="#home" onclick="closeMobileMenu()">Home</a></li>
+                <li><a href="#stations" onclick="closeMobileMenu()">Stations</a></li>
+                <li><a href="#restaurants" onclick="closeMobileMenu()">Restaurants</a></li>
+                <li><a href="#bills" onclick="closeMobileMenu()">My Bills</a></li>
+                <li><a href="#contact" onclick="closeMobileMenu()">Contact</a></li>
+                <li><a href="#" onclick="openLoginModal(); closeMobileMenu()">Login</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <h1>Charge Your Future</h1>
+            <p>Find the nearest EV charging stations, enjoy great food, and manage your charging bills all in one place.</p>
+            <div class="cta-buttons">
+                <a href="#stations" class="btn btn-primary">
+                    <i class="fas fa-map-marker-alt"></i>
+                    Find Stations
+                </a>
+                <a href="#restaurants" class="btn btn-secondary">
+                    <i class="fas fa-utensils"></i>
+                    Browse Restaurants
+                </a>
+                <button onclick="openBookingModal()" class="btn btn-primary">
+                    <i class="fas fa-calendar-check"></i>
+                    Book Appointment
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+        <div class="container">
+            <h2 class="section-title">Why Choose BosGreen?</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h3>Fast Charging</h3>
+                    <p>High-speed charging stations with multiple connector types to fit your vehicle.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-map-marked-alt"></i>
+                    </div>
+                    <h3>Real-time Location</h3>
+                    <p>Find available charging stations near you with real-time availability updates.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-credit-card"></i>
+                    </div>
+                    <h3>Easy Payment</h3>
+                    <p>Multiple payment options including mobile apps, cards, and contactless payments.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-utensils"></i>
+                    </div>
+                    <h3>Great Food</h3>
+                    <p>Enjoy delicious meals at our partner restaurants while your car charges.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>Usage Analytics</h3>
+                    <p>Track your charging history, costs, and environmental impact with detailed analytics.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-headset"></i>
+                    </div>
+                    <h3>24/7 Support</h3>
+                    <p>Round-the-clock customer support to help you with any charging issues.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Restaurants Section -->
+    <section class="restaurants" id="restaurants">
+        <div class="container">
+            <h2 class="section-title">Dine While You Charge</h2>
+            <div class="restaurant-grid">
+                <div class="restaurant-card">
+                    <div class="restaurant-image">
+                        <!-- You can replace the src with actual image URLs -->
+                        <img src="https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=400&h=200&fit=crop" alt="Spice Garden" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="icon-fallback" style="display: none;">
+                            <i class="fas fa-pepper-hot"></i>
+                        </div>
+                    </div>
+                    <div class="restaurant-info">
+                        <h3>Spice Garden</h3>
+                        <p>Authentic North Indian cuisine with traditional flavors</p>
+                        <div class="restaurant-rating">
+                            <div class="stars">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <span>4.8 (150 reviews)</span>
+                        </div>
+                        <button onclick="openMenuModal('Spice Garden')" class="btn btn-primary">View Menu</button>
+                    </div>
+                </div>
+                <div class="restaurant-card">
+                    <div class="restaurant-image">
+                        <!-- You can replace the src with actual image URLs -->
+                        <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400&h=200&fit=crop" alt="Dosa Corner" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="icon-fallback" style="display: none;">
+                            <i class="fas fa-bread-slice"></i>
+                        </div>
+                    </div>
+                    <div class="restaurant-info">
+                        <h3>Dosa Corner</h3>
+                        <p>South Indian specialties and crispy dosas</p>
+                        <div class="restaurant-rating">
+                            <div class="stars">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="far fa-star"></i>
+                            </div>
+                            <span>4.5 (120 reviews)</span>
+                        </div>
+                        <button onclick="openMenuModal('Dosa Corner')" class="btn btn-primary">View Menu</button>
+                    </div>
+                </div>
+                <div class="restaurant-card">
+                    <div class="restaurant-image">
+                        <!-- You can replace the src with actual image URLs -->
+                        <img src="https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=400&h=200&fit=crop" alt="Tandoor House" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="icon-fallback" style="display: none;">
+                            <i class="fas fa-fire"></i>
+                        </div>
+                    </div>
+                    <div class="restaurant-info">
+                        <h3>Tandoor House</h3>
+                        <p>Mughlai cuisine with clay oven specialties</p>
+                        <div class="restaurant-rating">
+                            <div class="stars">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <span>4.7 (95 reviews)</span>
+                        </div>
+                        <button onclick="openMenuModal('Tandoor House')" class="btn btn-primary">View Menu</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Map Section -->
+    <section class="map-section" id="stations">
+        <div class="container">
+            <h2 class="section-title">Find Charging Stations Near You</h2>
+            <div class="map-container">
+                <div>
+                    <i class="fas fa-map" style="font-size: 3rem; margin-bottom: 1rem; display: block;"></i>
+                    <p>Interactive map showing nearby charging stations</p>
+                    <p style="font-size: 0.9rem; margin-top: 1rem;">Click to view real-time availability and directions</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Bills Section -->
+    <section class="bills-section" id="bills">
+        <div class="bills-container">
+            <div class="bills-header">
+                <h2 class="section-title">My Bills & Payments</h2>
+                <p>Track your charging expenses and manage payments</p>
+            </div>
+            
+            <div class="bills-tabs">
+                <div class="bill-tab active" onclick="showBillsTab('recent')">Recent Bills</div>
+                <div class="bill-tab" onclick="showBillsTab('pending')">Pending</div>
+                <div class="bill-tab" onclick="showBillsTab('paid')">Paid</div>
+                <div class="bill-tab" onclick="showBillsTab('overdue')">Overdue</div>
+            </div>
+
+            <!-- Recent Bills -->
+            <div class="bills-content active" id="recent-bills">
+                <div class="bill-card">
+                    <div class="bill-header">
+                        <div class="bill-date">December 15, 2024</div>
+                        <div class="bill-status pending">Pending</div>
+                    </div>
+                    <div class="bill-details">
+                        <div class="bill-detail">
+                            <span>Station:</span>
+                            <span>BosGreen Central Station</span>
+                        </div>
+                        <div class="bill-detail">
+                            <span>Duration:</span>
+                            <span>2 hours 15 min</span>
+                        </div>
+                        <div class="bill-detail">
+                            <span>Energy Used:</span>
+                            <span>45 kWh</span>
+                        </div>
+                    </div>
+                    <div class="bill-amount">₹1,250</div>
+                    <div class="bill-actions">
+                        <button class="btn btn-primary btn-small" onclick="payBill('bill1')">
+                            <i class="fas fa-credit-card"></i> Pay Now
+                        </button>
+                        <button class="btn btn-secondary btn-small" onclick="downloadBill('bill1')">
+                            <i class="fas fa-download"></i> Download
+                        </button>
+                        <button class="btn btn-secondary btn-small" onclick="viewBillDetails('bill1')">
+                            <i class="fas fa-eye"></i> Details
+                        </button>
+                    </div>
+                </div>
+
+                <div class="bill-card">
+                    <div class="bill-header">
+                        <div class="bill-date">December 10, 2024</div>
+                        <div class="bill-status paid">Paid</div>
+                    </div>
+                    <div class="bill-details">
+                        <div class="bill-detail">
+                            <span>Station:</span>
+                            <span>Downtown EV Hub</span>
+                        </div>
+                        <div class="bill-detail">
+                            <span>Duration:</span>
+                            <span>45 min</span>
+                        </div>
+                        <div class="bill-detail">
+                            <span>Energy Used:</span>
+                            <span>15 kWh</span>
+                        </div>
+                    </div>
+                    <div class="bill-amount">₹875</div>
+                    <div class="bill-actions">
+                        <button class="btn btn-secondary btn-small" onclick="downloadBill('bill2')">
+                            <i class="fas fa-download"></i> Download
+                        </button>
+                        <button class="btn btn-secondary btn-small" onclick="viewBillDetails('bill2')">
+                            <i class="fas fa-eye"></i> Details
+                        </button>
+                    </div>
+                </div>
+
+                <div class="bill-card">
+                    <div class="bill-header">
+                        <div class="bill-date">December 5, 2024</div>
+                        <div class="bill-status overdue">Overdue</div>
+                    </div>
+                    <div class="bill-details">
+                        <div class="bill-detail">
+                            <span>Station:</span>
+                            <span>Mall Parking Station</span>
+                        </div>
+                        <div class="bill-detail">
+                            <span>Duration:</span>
+                            <span>3 hours 30 min</span>
+                        </div>
+                        <div class="bill-detail">
+                            <span>Energy Used:</span>
+                            <span>60 kWh</span>
+                        </div>
+                    </div>
+                    <div class="bill-amount">₹1,800</div>
+                    <div class="bill-actions">
+                        <button class="btn btn-primary btn-small" onclick="payBill('bill3')">
+                            <i class="fas fa-credit-card"></i> Pay Now
+                        </button>
+                        <button class="btn btn-secondary btn-small" onclick="downloadBill('bill3')">
+                            <i class="fas fa-download"></i> Download
+                        </button>
+                        <button class="btn btn-secondary btn-small" onclick="viewBillDetails('bill3')">
+                            <i class="fas fa-eye"></i> Details
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pending Bills -->
+            <div class="bills-content" id="pending-bills">
+                <div class="bill-card">
+                    <div class="bill-header">
+                        <div class="bill-date">December 15, 2024</div>
+                        <div class="bill-status pending">Pending</div>
+                    </div>
+                    <div class="bill-details">
+                        <div class="bill-detail">
+                            <span>Station:</span>
+                            <span>BosGreen Central Station</span>
+                        </div>
+                        <div class="bill-detail">
+                            <span>Duration:</span>
+                            <span>2 hours 15 min</span>
+                        </div>
+                        <div class="bill-detail">
+                            <span>Energy Used:</span>
+                            <span>45 kWh</span>
+                        </div>
+                    </div>
+                    <div class="bill-amount">₹1,250</div>
+                    <div class="bill-actions">
+                        <button class="btn btn-primary btn-small" onclick="payBill('bill1')">
+                            <i class="fas fa-credit-card"></i> Pay Now
+                        </button>
+                        <button class="btn btn-secondary btn-small" onclick="downloadBill('bill1')">
+                            <i class="fas fa-download"></i> Download
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Paid Bills -->
+            <div class="bills-content" id="paid-bills">
+                <div class="bill-card">
+                    <div class="bill-header">
+                        <div class="bill-date">December 10, 2024</div>
+                        <div class="bill-status paid">Paid</div>
+                    </div>
+                    <div class="bill-details">
+                        <div class="bill-detail">
+                            <span>Station:</span>
+                            <span>Downtown EV Hub</span>
+                        </div>
+                        <div class="bill-detail">
+                            <span>Duration:</span>
+                            <span>45 min</span>
+                        </div>
+                        <div class="bill-detail">
+                            <span>Energy Used:</span>
+                            <span>15 kWh</span>
+                        </div>
+                    </div>
+                    <div class="bill-amount">₹875</div>
+                    <div class="bill-actions">
+                        <button class="btn btn-secondary btn-small" onclick="downloadBill('bill2')">
+                            <i class="fas fa-download"></i> Download
+                        </button>
+                        <button class="btn btn-secondary btn-small" onclick="viewBillDetails('bill2')">
+                            <i class="fas fa-eye"></i> Details
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Overdue Bills -->
+            <div class="bills-content" id="overdue-bills">
+                <div class="bill-card">
+                    <div class="bill-header">
+                        <div class="bill-date">December 5, 2024</div>
+                        <div class="bill-status overdue">Overdue</div>
+                    </div>
+                    <div class="bill-details">
+                        <div class="bill-detail">
+                            <span>Station:</span>
+                            <span>Mall Parking Station</span>
+                        </div>
+                        <div class="bill-detail">
+                            <span>Duration:</span>
+                            <span>3 hours 30 min</span>
+                        </div>
+                        <div class="bill-detail">
+                            <span>Energy Used:</span>
+                            <span>60 kWh</span>
+                        </div>
+                    </div>
+                    <div class="bill-amount">₹1,800</div>
+                    <div class="bill-actions">
+                        <button class="btn btn-primary btn-small" onclick="payBill('bill3')">
+                            <i class="fas fa-credit-card"></i> Pay Now
+                        </button>
+                        <button class="btn btn-secondary btn-small" onclick="downloadBill('bill3')">
+                            <i class="fas fa-download"></i> Download
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact-section" id="contact">
+        <div class="contact-container">
+            <h2 class="section-title">Contact Us</h2>
+            <p style="text-align: center; margin-bottom: 2rem; color: #6b7280;">Get in touch with our team for support and inquiries</p>
+            
+            <div class="contact-grid">
+                <div class="contact-info">
+                    <h3 style="margin-bottom: 2rem; color: #1f2937;">Get In Touch</h3>
+                    
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div>
+                            <h4 style="margin-bottom: 0.5rem; color: #1f2937;">Address</h4>
+                            <p style="color: #6b7280; margin: 0;">123 Green Street, Eco City<br>Mumbai 400001, India</p>
+                        </div>
+                    </div>
+
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-phone"></i>
+                        </div>
+                        <div>
+                            <h4 style="margin-bottom: 0.5rem; color: #1f2937;">Phone</h4>
+                            <p style="color: #6b7280; margin: 0;">+91 (22) 1234-5678<br>+91 (22) 9876-5432</p>
+                        </div>
+                    </div>
+
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div>
+                            <h4 style="margin-bottom: 0.5rem; color: #1f2937;">Email</h4>
+                            <p style="color: #6b7280; margin: 0;">info@bosgreen.com<br>support@bosgreen.com</p>
+                        </div>
+                    </div>
+
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div>
+                            <h4 style="margin-bottom: 0.5rem; color: #1f2937;">Business Hours</h4>
+                            <p style="color: #6b7280; margin: 0;">Monday - Friday: 8:00 AM - 8:00 PM<br>Saturday - Sunday: 9:00 AM - 6:00 PM</p>
+                        </div>
+                    </div>
+
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-headset"></i>
+                        </div>
+                        <div>
+                            <h4 style="margin-bottom: 0.5rem; color: #1f2937;">24/7 Support</h4>
+                            <p style="color: #6b7280; margin: 0;">Emergency support available<br>24 hours a day, 7 days a week</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="contact-form">
+                    <h3 style="margin-bottom: 2rem; color: #1f2937;">Send us a Message</h3>
+                    <form id="contactForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="contactName">Full Name</label>
+                                <input type="text" id="contactName" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="contactEmail">Email</label>
+                                <input type="email" id="contactEmail" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="contactPhone">Phone Number</label>
+                            <input type="tel" id="contactPhone">
+                        </div>
+                        <div class="form-group">
+                            <label for="contactSubject">Subject</label>
+                            <select id="contactSubject" required>
+                                <option value="">Select a subject...</option>
+                                <option value="general">General Inquiry</option>
+                                <option value="support">Technical Support</option>
+                                <option value="billing">Billing Question</option>
+                                <option value="partnership">Partnership</option>
+                                <option value="feedback">Feedback</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="contactMessage">Message</label>
+                            <textarea id="contactMessage" placeholder="Tell us how we can help you..." required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">
+                            <i class="fas fa-paper-plane"></i> Send Message
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Advanced Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content advanced-login-modal">
+            <span class="close" onclick="closeLoginModal()">&times;</span>
+            
+            <!-- Login/Register Toggle -->
+            <div class="auth-toggle">
+                <button class="toggle-btn active" onclick="switchAuthMode('login')">Login</button>
+                <button class="toggle-btn" onclick="switchAuthMode('register')">Register</button>
+            </div>
+
+            <!-- Login Form -->
+            <div id="loginFormContainer" class="auth-form active">
+                <h2 style="margin-bottom: 1.5rem; color: #1f2937;">Welcome Back</h2>
+                <p style="color: #6b7280; margin-bottom: 2rem; text-align: center;">Sign in to your BosGreen account</p>
+                
+                <!-- Social Login Buttons -->
+                <div class="social-login">
+                    <button class="social-btn google-btn" onclick="socialLogin('google')">
+                        <i class="fab fa-google"></i> Continue with Google
+                    </button>
+                    <button class="social-btn facebook-btn" onclick="socialLogin('facebook')">
+                        <i class="fab fa-facebook-f"></i> Continue with Facebook
+                    </button>
+                </div>
+                
+                <div class="divider">
+                    <span>or</span>
+                </div>
+
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="loginEmail">Email Address</label>
+                        <div class="input-group">
+                            <i class="fas fa-envelope"></i>
+                            <input type="email" id="loginEmail" placeholder="Enter your email" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword">Password</label>
+                        <div class="input-group">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" id="loginPassword" placeholder="Enter your password" required>
+                            <button type="button" class="password-toggle" onclick="togglePassword('loginPassword')">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="form-options">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="rememberMe">
+                            <span class="checkmark"></span>
+                            Remember me
+                        </label>
+                        <a href="#" onclick="showForgotPassword()" class="forgot-link">Forgot Password?</a>
+                    </div>
+                    <button type="submit" class="btn btn-primary login-btn" style="width: 100%;">
+                        <span class="btn-text">Sign In</span>
+                        <div class="loading-spinner" style="display: none;">
+                            <i class="fas fa-spinner fa-spin"></i>
+                        </div>
+                    </button>
+                </form>
+            </div>
+
+            <!-- Register Form -->
+            <div id="registerFormContainer" class="auth-form">
+                <h2 style="margin-bottom: 1.5rem; color: #1f2937;">Create Account</h2>
+                <p style="color: #6b7280; margin-bottom: 2rem; text-align: center;">Join BosGreen for a sustainable future</p>
+                
+                <form id="registerForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="firstName">First Name</label>
+                            <div class="input-group">
+                                <i class="fas fa-user"></i>
+                                <input type="text" id="firstName" placeholder="First name" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="lastName">Last Name</label>
+                            <div class="input-group">
+                                <i class="fas fa-user"></i>
+                                <input type="text" id="lastName" placeholder="Last name" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="registerEmail">Email Address</label>
+                        <div class="input-group">
+                            <i class="fas fa-envelope"></i>
+                            <input type="email" id="registerEmail" placeholder="Enter your email" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Phone Number</label>
+                        <div class="input-group">
+                            <i class="fas fa-phone"></i>
+                            <input type="tel" id="phone" placeholder="+91 98765 43210" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="registerPassword">Password</label>
+                        <div class="input-group">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" id="registerPassword" placeholder="Create a strong password" required>
+                            <button type="button" class="password-toggle" onclick="togglePassword('registerPassword')">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        <div class="password-strength" id="passwordStrength">
+                            <div class="strength-bar">
+                                <div class="strength-fill" id="strengthFill"></div>
+                            </div>
+                            <div class="strength-text" id="strengthText">Password strength</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="confirmPassword">Confirm Password</label>
+                        <div class="input-group">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" id="confirmPassword" placeholder="Confirm your password" required>
+                            <button type="button" class="password-toggle" onclick="togglePassword('confirmPassword')">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="form-options">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="agreeTerms" required>
+                            <span class="checkmark"></span>
+                            I agree to the <a href="#" style="color: #10b981;">Terms of Service</a> and <a href="#" style="color: #10b981;">Privacy Policy</a>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="newsletter">
+                            <span class="checkmark"></span>
+                            Subscribe to newsletter for updates
+                        </label>
+                    </div>
+                    <button type="submit" class="btn btn-primary register-btn" style="width: 100%;">
+                        <span class="btn-text">Create Account</span>
+                        <div class="loading-spinner" style="display: none;">
+                            <i class="fas fa-spinner fa-spin"></i>
+                        </div>
+                    </button>
+                </form>
+            </div>
+
+            <!-- Forgot Password Form -->
+            <div id="forgotPasswordContainer" class="auth-form">
+                <h2 style="margin-bottom: 1.5rem; color: #1f2937;">Reset Password</h2>
+                <p style="color: #6b7280; margin-bottom: 2rem; text-align: center;">Enter your email to receive reset instructions</p>
+                
+                <form id="forgotPasswordForm">
+                    <div class="form-group">
+                        <label for="resetEmail">Email Address</label>
+                        <div class="input-group">
+                            <i class="fas fa-envelope"></i>
+                            <input type="email" id="resetEmail" placeholder="Enter your email" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">
+                        <span class="btn-text">Send Reset Link</span>
+                        <div class="loading-spinner" style="display: none;">
+                            <i class="fas fa-spinner fa-spin"></i>
+                        </div>
+                    </button>
+                </form>
+                <button onclick="switchAuthMode('login')" class="btn btn-secondary" style="width: 100%; margin-top: 1rem;">
+                    Back to Login
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Appointment Booking Modal -->
+    <div id="bookingModal" class="booking-modal">
+        <div class="booking-content">
+            <span class="close" onclick="closeBookingModal()">&times;</span>
+            <h2 style="margin-bottom: 1.5rem; color: #1f2937;">Book Your Charging Appointment</h2>
+            
+            <!-- Booking Steps -->
+            <div class="booking-steps">
+                <div class="booking-step">
+                    <div class="step-number active" id="step1">1</div>
+                    <div class="step-title active">Select Station</div>
+                </div>
+                <div class="booking-step">
+                    <div class="step-number" id="step2">2</div>
+                    <div class="step-title">Choose Time</div>
+                </div>
+                <div class="booking-step">
+                    <div class="step-number" id="step3">3</div>
+                    <div class="step-title">Confirm</div>
+                </div>
+            </div>
+
+            <!-- Step 1: Select Station -->
+            <div class="booking-form active" id="form1">
+                <div class="form-group">
+                    <label for="stationSelect">Select Charging Station</label>
+                    <select id="stationSelect" required>
+                        <option value="">Choose a station...</option>
+                        <option value="station1">BosGreen Central Station</option>
+                        <option value="station2">Downtown EV Hub</option>
+                        <option value="station3">Mall Parking Station</option>
+                        <option value="station4">Highway Rest Stop</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="vehicleType">Vehicle Type</label>
+                    <select id="vehicleType" required>
+                        <option value="">Select your vehicle...</option>
+                        <option value="tesla">Tesla</option>
+                        <option value="nissan">Nissan Leaf</option>
+                        <option value="chevrolet">Chevrolet Bolt</option>
+                        <option value="bmw">BMW i3</option>
+                        <option value="audi">Audi e-tron</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="chargingType">Charging Type</label>
+                    <select id="chargingType" required>
+                        <option value="">Select charging type...</option>
+                        <option value="fast">Fast Charging (30 min)</option>
+                        <option value="standard">Standard Charging (2 hours)</option>
+                        <option value="slow">Slow Charging (4 hours)</option>
+                    </select>
+                </div>
+                <button onclick="nextStep(2)" class="btn btn-primary" style="width: 100%;">Next</button>
+            </div>
+
+            <!-- Step 2: Choose Time -->
+            <div class="booking-form" id="form2">
+                <div class="form-group">
+                    <label for="bookingDate">Select Date</label>
+                    <input type="date" id="bookingDate" required>
+                </div>
+                <div class="form-group">
+                    <label>Select Time Slot</label>
+                    <div class="time-slots">
+                        <div class="time-slot" onclick="selectTimeSlot(this, '09:00')">09:00 AM</div>
+                        <div class="time-slot" onclick="selectTimeSlot(this, '10:00')">10:00 AM</div>
+                        <div class="time-slot" onclick="selectTimeSlot(this, '11:00')">11:00 AM</div>
+                        <div class="time-slot" onclick="selectTimeSlot(this, '12:00')">12:00 PM</div>
+                        <div class="time-slot" onclick="selectTimeSlot(this, '13:00')">01:00 PM</div>
+                        <div class="time-slot" onclick="selectTimeSlot(this, '14:00')">02:00 PM</div>
+                        <div class="time-slot" onclick="selectTimeSlot(this, '15:00')">03:00 PM</div>
+                        <div class="time-slot" onclick="selectTimeSlot(this, '16:00')">04:00 PM</div>
+                        <div class="time-slot disabled">05:00 PM</div>
+                        <div class="time-slot" onclick="selectTimeSlot(this, '17:00')">06:00 PM</div>
+                        <div class="time-slot" onclick="selectTimeSlot(this, '18:00')">07:00 PM</div>
+                        <div class="time-slot" onclick="selectTimeSlot(this, '19:00')">08:00 PM</div>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 1rem;">
+                    <button onclick="prevStep(1)" class="btn btn-secondary" style="flex: 1;">Previous</button>
+                    <button onclick="nextStep(3)" class="btn btn-primary" style="flex: 1;">Next</button>
+                </div>
+            </div>
+
+            <!-- Step 3: Confirm -->
+            <div class="booking-form" id="form3">
+                <div class="booking-summary">
+                    <h3>Booking Summary</h3>
+                    <div class="summary-item">
+                        <span>Station:</span>
+                        <span id="summaryStation">-</span>
+                    </div>
+                    <div class="summary-item">
+                        <span>Vehicle:</span>
+                        <span id="summaryVehicle">-</span>
+                    </div>
+                    <div class="summary-item">
+                        <span>Charging Type:</span>
+                        <span id="summaryCharging">-</span>
+                    </div>
+                    <div class="summary-item">
+                        <span>Date:</span>
+                        <span id="summaryDate">-</span>
+                    </div>
+                    <div class="summary-item">
+                        <span>Time:</span>
+                        <span id="summaryTime">-</span>
+                    </div>
+                    <div class="summary-item">
+                        <span>Estimated Cost:</span>
+                        <span id="summaryCost">-</span>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 1rem;">
+                    <button onclick="prevStep(2)" class="btn btn-secondary" style="flex: 1;">Previous</button>
+                    <button onclick="confirmBooking()" class="btn btn-primary" style="flex: 1;">Confirm Booking</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Menu Modal -->
+    <div id="menuModal" class="menu-modal">
+        <div class="menu-content">
+            <span class="close" onclick="closeMenuModal()">&times;</span>
+            <div class="menu-header">
+                <h2 id="menuRestaurantName">Restaurant Menu</h2>
+                <p>Delicious meals while you charge</p>
+            </div>
+            
+            <div class="menu-categories">
+                <div class="menu-category active" onclick="filterMenu('all')">All</div>
+                <div class="menu-category" onclick="filterMenu('breakfast')">Breakfast</div>
+                <div class="menu-category" onclick="filterMenu('lunch')">Lunch</div>
+                <div class="menu-category" onclick="filterMenu('dinner')">Dinner</div>
+                <div class="menu-category" onclick="filterMenu('drinks')">Drinks</div>
+                <div class="menu-category" onclick="filterMenu('sides')">Sides</div>
+                <div class="menu-category" onclick="filterMenu('dessert')">Desserts</div>
+            </div>
+
+            <div class="menu-items" id="menuItems">
+                <!-- Menu items will be populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>BosGreen</h3>
+                    <p>Leading the charge towards a sustainable future with convenient EV charging solutions.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#stations">Find Stations</a></li>
+                        <li><a href="#restaurants">Restaurants</a></li>
+                        <li><a href="#bills">My Bills</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Support</h3>
+                    <ul>
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">Report Issue</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Connect</h3>
+                    <ul>
+                        <li><a href="#"><i class="fab fa-facebook"></i> Facebook</a></li>
+                        <li><a href="#"><i class="fab fa-twitter"></i> Twitter</a></li>
+                        <li><a href="#"><i class="fab fa-instagram"></i> Instagram</a></li>
+                        <li><a href="#"><i class="fab fa-linkedin"></i> LinkedIn</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 BosGreen. All rights reserved. | Privacy Policy | Terms of Service</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Advanced Authentication System
+        let currentUser = null;
+        let isAuthenticated = false;
+
+        // Check for existing session on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuthStatus();
+            setupEventListeners();
+        });
+
+        function setupEventListeners() {
+            // Login form submission
+            document.getElementById('loginForm').addEventListener('submit', handleLogin);
+            
+            // Register form submission
+            document.getElementById('registerForm').addEventListener('submit', handleRegister);
+            
+            // Forgot password form submission
+            document.getElementById('forgotPasswordForm').addEventListener('submit', handleForgotPassword);
+            
+            // Password strength checker
+            document.getElementById('registerPassword').addEventListener('input', checkPasswordStrength);
+            
+            // Confirm password validation
+            document.getElementById('confirmPassword').addEventListener('input', validateConfirmPassword);
+        }
+
+        // Modal functionality
+        function openLoginModal() {
+            document.getElementById('loginModal').style.display = 'block';
+            switchAuthMode('login');
+        }
+
+        function closeLoginModal() {
+            document.getElementById('loginModal').style.display = 'none';
+            resetForms();
+        }
+
+        // Mobile menu functionality
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
+            const toggle = document.getElementById('mobileMenuToggle');
+            const icon = toggle.querySelector('i');
+            
+            if (mobileMenu.classList.contains('active')) {
+                closeMobileMenu();
+            } else {
+                mobileMenu.classList.add('active');
+                mobileMenuOverlay.classList.add('active');
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
+                document.body.style.overflow = 'hidden'; // Prevent background scrolling
+            }
+        }
+
+        function closeMobileMenu() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
+            const toggle = document.getElementById('mobileMenuToggle');
+            const icon = toggle.querySelector('i');
+            
+            mobileMenu.classList.remove('active');
+            mobileMenuOverlay.classList.remove('active');
+            icon.classList.remove('fa-times');
+            icon.classList.add('fa-bars');
+            document.body.style.overflow = ''; // Restore background scrolling
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const loginModal = document.getElementById('loginModal');
+            const bookingModal = document.getElementById('bookingModal');
+            const menuModal = document.getElementById('menuModal');
+            
+            if (event.target == loginModal) {
+                loginModal.style.display = 'none';
+                resetForms();
+            }
+            if (event.target == bookingModal) {
+                bookingModal.style.display = 'none';
+            }
+            if (event.target == menuModal) {
+                menuModal.style.display = 'none';
+            }
+        }
+
+        // Switch between login and register modes
+        function switchAuthMode(mode) {
+            const loginContainer = document.getElementById('loginFormContainer');
+            const registerContainer = document.getElementById('registerFormContainer');
+            const forgotContainer = document.getElementById('forgotPasswordContainer');
+            const loginBtn = document.querySelector('.toggle-btn[onclick="switchAuthMode(\'login\')"]');
+            const registerBtn = document.querySelector('.toggle-btn[onclick="switchAuthMode(\'register\')"]');
+
+            // Hide all forms
+            loginContainer.classList.remove('active');
+            registerContainer.classList.remove('active');
+            forgotContainer.classList.remove('active');
+
+            // Remove active class from buttons
+            loginBtn.classList.remove('active');
+            registerBtn.classList.remove('active');
+
+            if (mode === 'login') {
+                loginContainer.classList.add('active');
+                loginBtn.classList.add('active');
+            } else if (mode === 'register') {
+                registerContainer.classList.add('active');
+                registerBtn.classList.add('active');
+            } else if (mode === 'forgot') {
+                forgotContainer.classList.add('active');
+            }
+        }
+
+        function showForgotPassword() {
+            switchAuthMode('forgot');
+        }
+
+        // Password visibility toggle
+        function togglePassword(inputId) {
+            const input = document.getElementById(inputId);
+            const toggle = input.nextElementSibling;
+            const icon = toggle.querySelector('i');
+
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+
+        // Password strength checker
+        function checkPasswordStrength() {
+            const password = document.getElementById('registerPassword').value;
+            const strengthFill = document.getElementById('strengthFill');
+            const strengthText = document.getElementById('strengthText');
+
+            let strength = 0;
+            let feedback = '';
+
+            // Check length
+            if (password.length >= 8) strength += 25;
+            if (password.length >= 12) strength += 25;
+
+            // Check for different character types
+            if (/[a-z]/.test(password)) strength += 25;
+            if (/[A-Z]/.test(password)) strength += 25;
+            if (/[0-9]/.test(password)) strength += 25;
+            if (/[^A-Za-z0-9]/.test(password)) strength += 25;
+
+            // Remove existing classes
+            strengthFill.className = 'strength-fill';
+
+            // Apply strength classes
+            if (strength <= 25) {
+                strengthFill.classList.add('weak');
+                feedback = 'Weak password';
+            } else if (strength <= 50) {
+                strengthFill.classList.add('fair');
+                feedback = 'Fair password';
+            } else if (strength <= 75) {
+                strengthFill.classList.add('good');
+                feedback = 'Good password';
+            } else {
+                strengthFill.classList.add('strong');
+                feedback = 'Strong password';
+            }
+
+            strengthText.textContent = feedback;
+        }
+
+        // Confirm password validation
+        function validateConfirmPassword() {
+            const password = document.getElementById('registerPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const confirmInput = document.getElementById('confirmPassword');
+
+            if (confirmPassword && password !== confirmPassword) {
+                confirmInput.setCustomValidity('Passwords do not match');
+            } else {
+                confirmInput.setCustomValidity('');
+            }
+        }
+
+        // Handle login
+        async function handleLogin(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            const rememberMe = document.getElementById('rememberMe').checked;
+
+            const loginBtn = document.querySelector('.login-btn');
+            const btnText = loginBtn.querySelector('.btn-text');
+            const spinner = loginBtn.querySelector('.loading-spinner');
+
+            // Show loading state
+            btnText.style.display = 'none';
+            spinner.style.display = 'inline-block';
+            loginBtn.disabled = true;
+
+            try {
+                // Simulate API call
+                await new Promise(resolve => setTimeout(resolve, 2000));
+
+                // Mock authentication (in real app, this would be API call)
+                if (email && password) {
+                    const user = {
+                        id: 1,
+                        firstName: 'John',
+                        lastName: 'Doe',
+                        email: email,
+                        phone: '+91 98765 43210',
+                        avatar: 'JD'
+                    };
+
+                    loginUser(user, rememberMe);
+                    showNotification('Login successful!', 'success');
+                    closeLoginModal();
+                } else {
+                    throw new Error('Invalid credentials');
+                }
+            } catch (error) {
+                showNotification('Login failed. Please check your credentials.', 'error');
+            } finally {
+                // Reset loading state
+                btnText.style.display = 'inline';
+                spinner.style.display = 'none';
+                loginBtn.disabled = false;
+            }
+        }
+
+        // Handle registration
+        async function handleRegister(e) {
+            e.preventDefault();
+            
+            const firstName = document.getElementById('firstName').value;
+            const lastName = document.getElementById('lastName').value;
+            const email = document.getElementById('registerEmail').value;
+            const phone = document.getElementById('phone').value;
+            const password = document.getElementById('registerPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const agreeTerms = document.getElementById('agreeTerms').checked;
+            const newsletter = document.getElementById('newsletter').checked;
+
+            if (password !== confirmPassword) {
+                showNotification('Passwords do not match!', 'error');
+                return;
+            }
+
+            if (!agreeTerms) {
+                showNotification('Please agree to the terms and conditions.', 'error');
+                return;
+            }
+
+            const registerBtn = document.querySelector('.register-btn');
+            const btnText = registerBtn.querySelector('.btn-text');
+            const spinner = registerBtn.querySelector('.loading-spinner');
+
+            // Show loading state
+            btnText.style.display = 'none';
+            spinner.style.display = 'inline-block';
+            registerBtn.disabled = true;
+
+            try {
+                // Simulate API call
+                await new Promise(resolve => setTimeout(resolve, 2000));
+
+                const user = {
+                    id: Date.now(),
+                    firstName: firstName,
+                    lastName: lastName,
+                    email: email,
+                    phone: phone,
+                    avatar: firstName.charAt(0) + lastName.charAt(0)
+                };
+
+                loginUser(user, false);
+                showNotification('Account created successfully!', 'success');
+                closeLoginModal();
+            } catch (error) {
+                showNotification('Registration failed. Please try again.', 'error');
+            } finally {
+                // Reset loading state
+                btnText.style.display = 'inline';
+                spinner.style.display = 'none';
+                registerBtn.disabled = false;
+            }
+        }
+
+        // Handle forgot password
+        async function handleForgotPassword(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('resetEmail').value;
+            const btn = e.target.querySelector('button');
+            const btnText = btn.querySelector('.btn-text');
+            const spinner = btn.querySelector('.loading-spinner');
+
+            // Show loading state
+            btnText.style.display = 'none';
+            spinner.style.display = 'inline-block';
+            btn.disabled = true;
+
+            try {
+                // Simulate API call
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                
+                showNotification('Password reset link sent to your email!', 'success');
+                switchAuthMode('login');
+            } catch (error) {
+                showNotification('Failed to send reset link. Please try again.', 'error');
+            } finally {
+                // Reset loading state
+                btnText.style.display = 'inline';
+                spinner.style.display = 'none';
+                btn.disabled = false;
+            }
+        }
+
+        // Social login
+        function socialLogin(provider) {
+            showNotification(`Connecting to ${provider}...`, 'info');
+            // In real app, this would redirect to OAuth provider
+        }
+
+        // User management functions
+        function loginUser(user, rememberMe) {
+            currentUser = user;
+            isAuthenticated = true;
+
+            if (rememberMe) {
+                localStorage.setItem('bosgreen_user', JSON.stringify(user));
+            } else {
+                sessionStorage.setItem('bosgreen_user', JSON.stringify(user));
+            }
+
+            updateUIForAuthenticatedUser();
+        }
+
+        function logout() {
+            currentUser = null;
+            isAuthenticated = false;
+            
+            localStorage.removeItem('bosgreen_user');
+            sessionStorage.removeItem('bosgreen_user');
+            
+            updateUIForUnauthenticatedUser();
+            showNotification('Logged out successfully!', 'success');
+        }
+
+        function checkAuthStatus() {
+            const savedUser = localStorage.getItem('bosgreen_user') || sessionStorage.getItem('bosgreen_user');
+            
+            if (savedUser) {
+                try {
+                    const user = JSON.parse(savedUser);
+                    loginUser(user, false);
+                } catch (error) {
+                    console.error('Error parsing saved user:', error);
+                }
+            }
+        }
+
+        function updateUIForAuthenticatedUser() {
+            document.getElementById('loginBtn').style.display = 'none';
+            document.getElementById('userProfile').style.display = 'flex';
+            
+            if (currentUser) {
+                document.getElementById('userAvatar').textContent = currentUser.avatar;
+                document.getElementById('userName').textContent = `${currentUser.firstName} ${currentUser.lastName}`;
+            }
+        }
+
+        function updateUIForUnauthenticatedUser() {
+            document.getElementById('loginBtn').style.display = 'inline-flex';
+            document.getElementById('userProfile').style.display = 'none';
+            document.getElementById('profileDropdown').classList.remove('active');
+        }
+
+        // Profile dropdown
+        function toggleProfileDropdown() {
+            const dropdown = document.getElementById('profileDropdown');
+            dropdown.classList.toggle('active');
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            const profile = document.getElementById('userProfile');
+            const dropdown = document.getElementById('profileDropdown');
+            
+            if (!profile.contains(event.target)) {
+                dropdown.classList.remove('active');
+            }
+        });
+
+        // Profile functions
+        function showProfile() {
+            showNotification('Profile page would open here', 'info');
+            document.getElementById('profileDropdown').classList.remove('active');
+        }
+
+        function showBookings() {
+            showNotification('Bookings page would open here', 'info');
+            document.getElementById('profileDropdown').classList.remove('active');
+        }
+
+        function showBills() {
+            document.getElementById('profileDropdown').classList.remove('active');
+            // Scroll to bills section
+            document.getElementById('bills').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function showSettings() {
+            showNotification('Settings page would open here', 'info');
+            document.getElementById('profileDropdown').classList.remove('active');
+        }
+
+        // Utility functions
+        function resetForms() {
+            document.getElementById('loginForm').reset();
+            document.getElementById('registerForm').reset();
+            document.getElementById('forgotPasswordForm').reset();
+            
+            // Reset password strength
+            document.getElementById('strengthFill').className = 'strength-fill';
+            document.getElementById('strengthText').textContent = 'Password strength';
+        }
+
+        function showNotification(message, type = 'info') {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.className = `notification notification-${type}`;
+            notification.innerHTML = `
+                <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+                <span>${message}</span>
+                <button onclick="this.parentElement.remove()">&times;</button>
+            `;
+            
+            // Add to page
+            document.body.appendChild(notification);
+            
+            // Auto remove after 5 seconds
+            setTimeout(() => {
+                if (notification.parentElement) {
+                    notification.remove();
+                }
+            }, 5000);
+        }
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add some interactive features
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add loading animation to feature cards
+            const featureCards = document.querySelectorAll('.feature-card');
+            featureCards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    card.style.transition = 'all 0.6s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+
+            // Restaurant cards now use menu modal functionality
+            // Click handlers are handled by the View Menu buttons
+
+            // Map container click handler
+            const mapContainer = document.querySelector('.map-container');
+            mapContainer.addEventListener('click', function() {
+                alert('This would open an interactive map showing nearby charging stations with real-time availability and directions.');
+            });
+        });
+
+        // Appointment Booking Functions
+        function openBookingModal() {
+            document.getElementById('bookingModal').style.display = 'block';
+            // Set minimum date to today
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('bookingDate').min = today;
+        }
+
+        function closeBookingModal() {
+            document.getElementById('bookingModal').style.display = 'none';
+            resetBookingForm();
+        }
+
+        function resetBookingForm() {
+            // Reset all forms
+            document.getElementById('form1').classList.remove('active');
+            document.getElementById('form2').classList.remove('active');
+            document.getElementById('form3').classList.remove('active');
+            document.getElementById('form1').classList.add('active');
+            
+            // Reset step indicators
+            document.querySelectorAll('.step-number').forEach(step => {
+                step.classList.remove('active', 'completed');
+            });
+            document.querySelectorAll('.step-title').forEach(title => {
+                title.classList.remove('active');
+            });
+            document.getElementById('step1').classList.add('active');
+            document.querySelector('.step-title').classList.add('active');
+            
+            // Reset form fields
+            document.getElementById('stationSelect').value = '';
+            document.getElementById('vehicleType').value = '';
+            document.getElementById('chargingType').value = '';
+            document.getElementById('bookingDate').value = '';
+            
+            // Reset time slots
+            document.querySelectorAll('.time-slot').forEach(slot => {
+                slot.classList.remove('selected');
+            });
+        }
+
+        function nextStep(step) {
+            // Validate current step
+            if (step === 2) {
+                const station = document.getElementById('stationSelect').value;
+                const vehicle = document.getElementById('vehicleType').value;
+                const charging = document.getElementById('chargingType').value;
+                
+                if (!station || !vehicle || !charging) {
+                    alert('Please fill in all fields before proceeding.');
+                    return;
+                }
+            }
+            
+            if (step === 3) {
+                const date = document.getElementById('bookingDate').value;
+                const selectedTime = document.querySelector('.time-slot.selected');
+                
+                if (!date || !selectedTime) {
+                    alert('Please select a date and time slot.');
+                    return;
+                }
+                
+                // Update summary
+                updateBookingSummary();
+            }
+            
+            // Hide current form and show next
+            document.querySelectorAll('.booking-form').forEach(form => {
+                form.classList.remove('active');
+            });
+            document.getElementById('form' + step).classList.add('active');
+            
+            // Update step indicators
+            for (let i = 1; i <= step; i++) {
+                if (i < step) {
+                    document.getElementById('step' + i).classList.remove('active');
+                    document.getElementById('step' + i).classList.add('completed');
+                } else {
+                    document.getElementById('step' + i).classList.add('active');
+                }
+            }
+            
+            // Update step titles
+            document.querySelectorAll('.step-title').forEach((title, index) => {
+                title.classList.remove('active');
+                if (index < step) {
+                    title.classList.add('active');
+                }
+            });
+        }
+
+        function prevStep(step) {
+            // Hide current form and show previous
+            document.querySelectorAll('.booking-form').forEach(form => {
+                form.classList.remove('active');
+            });
+            document.getElementById('form' + step).classList.add('active');
+            
+            // Update step indicators
+            for (let i = 1; i <= 3; i++) {
+                if (i < step) {
+                    document.getElementById('step' + i).classList.remove('active');
+                    document.getElementById('step' + i).classList.add('completed');
+                } else if (i === step) {
+                    document.getElementById('step' + i).classList.add('active');
+                } else {
+                    document.getElementById('step' + i).classList.remove('active', 'completed');
+                }
+            }
+        }
+
+        function selectTimeSlot(element, time) {
+            // Remove selection from all time slots
+            document.querySelectorAll('.time-slot').forEach(slot => {
+                slot.classList.remove('selected');
+            });
+            
+            // Add selection to clicked slot
+            element.classList.add('selected');
+        }
+
+        function updateBookingSummary() {
+            const station = document.getElementById('stationSelect');
+            const vehicle = document.getElementById('vehicleType');
+            const charging = document.getElementById('chargingType');
+            const date = document.getElementById('bookingDate');
+            const selectedTime = document.querySelector('.time-slot.selected');
+            
+            document.getElementById('summaryStation').textContent = station.options[station.selectedIndex].text;
+            document.getElementById('summaryVehicle').textContent = vehicle.options[vehicle.selectedIndex].text;
+            document.getElementById('summaryCharging').textContent = charging.options[charging.selectedIndex].text;
+            document.getElementById('summaryDate').textContent = date.value;
+            document.getElementById('summaryTime').textContent = selectedTime ? selectedTime.textContent : '-';
+            
+            // Calculate estimated cost
+            let cost = 0;
+            switch(charging.value) {
+                case 'fast':
+                    cost = 1500;
+                    break;
+                case 'standard':
+                    cost = 800;
+                    break;
+                case 'slow':
+                    cost = 500;
+                    break;
+            }
+            document.getElementById('summaryCost').textContent = '₹' + cost;
+        }
+
+        function confirmBooking() {
+            alert('Booking confirmed! You will receive a confirmation email shortly.\n\nBooking Details:\n' +
+                  'Station: ' + document.getElementById('summaryStation').textContent + '\n' +
+                  'Date: ' + document.getElementById('summaryDate').textContent + '\n' +
+                  'Time: ' + document.getElementById('summaryTime').textContent + '\n' +
+                  'Cost: ' + document.getElementById('summaryCost').textContent);
+            closeBookingModal();
+        }
+
+        // Menu Functions
+        function openMenuModal(restaurantName) {
+            document.getElementById('menuRestaurantName').textContent = restaurantName;
+            document.getElementById('menuModal').style.display = 'block';
+            loadMenuItems(restaurantName);
+        }
+
+        function closeMenuModal() {
+            document.getElementById('menuModal').style.display = 'none';
+        }
+
+        function loadMenuItems(restaurantName) {
+            const menuItems = document.getElementById('menuItems');
+            menuItems.innerHTML = '';
+            
+            let items = [];
+            
+            // Menu data for different restaurants
+            if (restaurantName === 'Spice Garden') {
+                items = [
+                    { name: 'Butter Chicken', description: 'Tender chicken in rich tomato gravy', price: '₹450', category: 'dinner', icon: 'fas fa-drumstick-bite', image: 'https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=300&h=200&fit=crop' },
+                    { name: 'Paneer Tikka', description: 'Grilled cottage cheese with spices', price: '₹350', category: 'lunch', icon: 'fas fa-cheese', image: 'https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=300&h=200&fit=crop' },
+                    { name: 'Dal Makhani', description: 'Creamy black lentils slow-cooked', price: '₹280', category: 'dinner', icon: 'fas fa-seedling', image: 'https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=300&h=200&fit=crop' },
+                    { name: 'Naan Bread', description: 'Fresh baked tandoor bread', price: '₹50', category: 'lunch', icon: 'fas fa-bread-slice', image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=300&h=200&fit=crop' },
+                    { name: 'Mango Lassi', description: 'Sweet yogurt drink with mango', price: '₹120', category: 'drinks', icon: 'fas fa-glass-whiskey', image: 'https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=300&h=200&fit=crop' },
+                    { name: 'Gulab Jamun', description: 'Sweet milk dumplings in syrup', price: '₹80', category: 'dessert', icon: 'fas fa-cookie', image: 'https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=300&h=200&fit=crop' }
+                ];
+            } else if (restaurantName === 'Dosa Corner') {
+                items = [
+                    { name: 'Masala Dosa', description: 'Crispy rice crepe with potato filling', price: '₹180', category: 'breakfast', icon: 'fas fa-bread-slice', image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=300&h=200&fit=crop' },
+                    { name: 'Idli Sambar', description: 'Steamed rice cakes with lentil soup', price: '₹120', category: 'breakfast', icon: 'fas fa-seedling', image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=300&h=200&fit=crop' },
+                    { name: 'Vada Curry', description: 'Spicy lentil dumplings in gravy', price: '₹200', category: 'lunch', icon: 'fas fa-carrot', image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=300&h=200&fit=crop' },
+                    { name: 'Filter Coffee', description: 'Traditional South Indian coffee', price: '₹60', category: 'drinks', icon: 'fas fa-coffee', image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=300&h=200&fit=crop' },
+                    { name: 'Coconut Chutney', description: 'Fresh coconut and mint chutney', price: '₹40', category: 'sides', icon: 'fas fa-leaf', image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=300&h=200&fit=crop' },
+                    { name: 'Payasam', description: 'Sweet rice pudding with nuts', price: '₹100', category: 'dessert', icon: 'fas fa-cookie', image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=300&h=200&fit=crop' }
+                ];
+            } else if (restaurantName === 'Tandoor House') {
+                items = [
+                    { name: 'Tandoori Chicken', description: 'Marinated chicken cooked in clay oven', price: '₹550', category: 'dinner', icon: 'fas fa-fire', image: 'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=300&h=200&fit=crop' },
+                    { name: 'Seekh Kebab', description: 'Minced meat kebabs with spices', price: '₹420', category: 'lunch', icon: 'fas fa-drumstick-bite', image: 'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=300&h=200&fit=crop' },
+                    { name: 'Biryani', description: 'Fragrant rice with tender meat', price: '₹380', category: 'dinner', icon: 'fas fa-bowl-food', image: 'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=300&h=200&fit=crop' },
+                    { name: 'Raita', description: 'Cooling yogurt with vegetables', price: '₹80', category: 'sides', icon: 'fas fa-seedling', image: 'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=300&h=200&fit=crop' },
+                    { name: 'Masala Chai', description: 'Spiced Indian tea with milk', price: '₹70', category: 'drinks', icon: 'fas fa-coffee', image: 'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=300&h=200&fit=crop' },
+                    { name: 'Kulfi', description: 'Traditional Indian ice cream', price: '₹120', category: 'dessert', icon: 'fas fa-ice-cream', image: 'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=300&h=200&fit=crop' }
+                ];
+            }
+            
+            // Display all items initially
+            displayMenuItems(items);
+        }
+
+        function displayMenuItems(items) {
+            const menuItems = document.getElementById('menuItems');
+            menuItems.innerHTML = '';
+            
+            items.forEach(item => {
+                const menuItem = document.createElement('div');
+                menuItem.className = 'menu-item';
+                menuItem.setAttribute('data-category', item.category);
+                
+                menuItem.innerHTML = `
+                    <div class="menu-item-image">
+                        <img src="${item.image}" alt="${item.name}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="icon-fallback" style="display: none;">
+                            <i class="${item.icon}"></i>
+                        </div>
+                    </div>
+                    <div class="menu-item-info">
+                        <div class="menu-item-title">${item.name}</div>
+                        <div class="menu-item-description">${item.description}</div>
+                        <div class="menu-item-price">${item.price}</div>
+                    </div>
+                `;
+                
+                menuItems.appendChild(menuItem);
+            });
+        }
+
+        function filterMenu(category) {
+            // Update active category
+            document.querySelectorAll('.menu-category').forEach(cat => {
+                cat.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Filter menu items
+            const menuItems = document.querySelectorAll('.menu-item');
+            menuItems.forEach(item => {
+                if (category === 'all' || item.getAttribute('data-category') === category) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+
+        // Bills Functions
+        function showBillsTab(tab) {
+            // Hide all bill contents
+            document.querySelectorAll('.bills-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Remove active class from all tabs
+            document.querySelectorAll('.bill-tab').forEach(tabElement => {
+                tabElement.classList.remove('active');
+            });
+            
+            // Show selected content and activate tab
+            document.getElementById(tab + '-bills').classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function payBill(billId) {
+            // Simulate payment process
+            alert('Payment Gateway Integration\n\nThis would redirect to a secure payment gateway for processing the payment.\n\nBill ID: ' + billId);
+        }
+
+        function downloadBill(billId) {
+            // Simulate bill download
+            alert('Bill Download\n\nThis would generate and download a PDF invoice.\n\nBill ID: ' + billId);
+        }
+
+        function viewBillDetails(billId) {
+            // Simulate bill details view
+            const billDetails = {
+                'bill1': {
+                    date: 'December 15, 2024',
+                    station: 'BosGreen Central Station',
+                    duration: '2 hours 15 min',
+                    energy: '45 kWh',
+                    rate: '₹28/kWh',
+                    amount: '₹1,250',
+                    status: 'Pending'
+                },
+                'bill2': {
+                    date: 'December 10, 2024',
+                    station: 'Downtown EV Hub',
+                    duration: '45 min',
+                    energy: '15 kWh',
+                    rate: '₹28/kWh',
+                    amount: '₹875',
+                    status: 'Paid'
+                },
+                'bill3': {
+                    date: 'December 5, 2024',
+                    station: 'Mall Parking Station',
+                    duration: '3 hours 30 min',
+                    energy: '60 kWh',
+                    rate: '₹30/kWh',
+                    amount: '₹1,800',
+                    status: 'Overdue'
+                }
+            };
+
+            const bill = billDetails[billId];
+            if (bill) {
+                alert('Bill Details\n\n' +
+                      'Date: ' + bill.date + '\n' +
+                      'Station: ' + bill.station + '\n' +
+                      'Duration: ' + bill.duration + '\n' +
+                      'Energy Used: ' + bill.energy + '\n' +
+                      'Rate: ' + bill.rate + '\n' +
+                      'Total Amount: ' + bill.amount + '\n' +
+                      'Status: ' + bill.status);
+            }
+        }
+
+        // Contact Form Functions
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('contactName').value;
+            const email = document.getElementById('contactEmail').value;
+            const phone = document.getElementById('contactPhone').value;
+            const subject = document.getElementById('contactSubject').value;
+            const message = document.getElementById('contactMessage').value;
+            
+            // Simulate form submission
+            alert('Message Sent Successfully!\n\n' +
+                  'Name: ' + name + '\n' +
+                  'Email: ' + email + '\n' +
+                  'Phone: ' + phone + '\n' +
+                  'Subject: ' + subject + '\n' +
+                  'Message: ' + message + '\n\n' +
+                  'We will get back to you within 24 hours.');
+            
+            // Reset form
+            document.getElementById('contactForm').reset();
+        });
+
+        // Enhanced restaurant image handling
+        document.addEventListener('DOMContentLoaded', function() {
+            // Handle restaurant images
+            const restaurantImages = document.querySelectorAll('.restaurant-image img');
+            restaurantImages.forEach(img => {
+                img.addEventListener('load', function() {
+                    // Image loaded successfully, hide fallback
+                    this.nextElementSibling.style.display = 'none';
+                });
+                
+                img.addEventListener('error', function() {
+                    // Image failed to load, show fallback
+                    this.style.display = 'none';
+                    this.nextElementSibling.style.display = 'flex';
+                });
+            });
+        });
+    </script>
+</body>
+</html>
